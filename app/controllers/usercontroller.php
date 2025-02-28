@@ -10,15 +10,14 @@ class UserController
     public function __construct()
     {
         $this->userService = new UserService();
-    }
-
-    public function login()
-    {
         // Start the session if not already started
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+    }
 
+    public function login()
+    {
         $error = null;
         $successMessage = $_SESSION['success_message'] ?? null;
         unset($_SESSION['success_message']);
@@ -47,10 +46,6 @@ class UserController
 
     public function logout()
     {
-        // Start the session if not already started
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
         session_unset();
         session_destroy();
         header('Location: /');
