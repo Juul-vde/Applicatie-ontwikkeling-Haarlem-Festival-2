@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Services\UserService;
 
 class UserController
 {
@@ -8,14 +9,11 @@ class UserController
 
     public function __construct()
     {
-        parent::__construct();
         $this->userService = new UserService();
-        $this->startSession();
     }
 
     public function login()
     {
-        $this->redirectIfLoggedIn();
         $error = null;
 
         $successMessage = $_SESSION['success_message'] ?? null;
