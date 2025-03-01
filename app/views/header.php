@@ -13,21 +13,29 @@
 
 <body>
     <header class="p-3 text-white">
-        <div class="container">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <img src="/media/logoplaceholder.png" alt="Logo" width="40" height="40" class="me-2">
-            </a>
+        <div class="container-fluid">
+            <div class="logo">
+                <a href="/">
+                    <img src="/media/logo.png" alt="Logo">
+                </a>
+            </div>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-white">HOME</a></li>
+                <li><a href="/" class="nav-link px-2 text-white">HOME</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">DANCE!</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">FOOD</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">HISTORY</a></li>
+                <li><a href="/history" class="nav-link px-2 text-white">HISTORY</a></li>
             </ul>
 
             <div class="text-end">
                 <a href="/user/login" class="btn btn-outline-light me-2">Login</a>
                 <button type="button" class="btn btn-signup">Sign-up</button>
+            </div>
+
+            <div class="cart">
+                <a href="/">
+                    <img src="/media/shoppingcart.png" alt="Shopping Cart">
+                </a>
             </div>
         </div>
     </header>
