@@ -1,16 +1,26 @@
+USE webshop;
+
+-- Drop the dependent tables first
+DROP TABLE IF EXISTS `Music_session`;
+DROP TABLE IF EXISTS `Tour`;
+DROP TABLE IF EXISTS `Ticket`;
+
+-- Then drop the other tables
+DROP TABLE IF EXISTS `Session`;
+DROP TABLE IF EXISTS `Orderline`;
+DROP TABLE IF EXISTS `Order`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `Event`;
 DROP TABLE IF EXISTS `Page`;
 DROP TABLE IF EXISTS `Artist`;
 DROP TABLE IF EXISTS `Venue`;
-DROP TABLE IF EXISTS `Ticket`;
-DROP TABLE IF EXISTS `Tour`;
-DROP TABLE IF EXISTS `Session`;
-DROP TABLE IF EXISTS `Music_session`;
-DROP TABLE IF EXISTS `Restaurant_session`;
 DROP TABLE IF EXISTS `Image`;
-DROP TABLE IF EXISTS `Order`;
-DROP TABLE IF EXISTS `OrderLine`;
+DROP TABLE IF EXISTS `Restaurant_session`;
+-- Table: `Image`
+CREATE TABLE `Image` (
+    `id` INT PRIMARY KEY,
+    `image` VARCHAR(255)
+);
 
 -- Table: `User`
 CREATE TABLE `User` (
@@ -34,17 +44,6 @@ CREATE TABLE `Event` (
     `type` VARCHAR(50)
 );
 
--- Table: `Page`
-CREATE TABLE `Page` (
-    `id` INT PRIMARY KEY,
-    `header` VARCHAR(255),
-    `footer` VARCHAR(255),
-    `image` INT,
-    `content` TEXT,
-    `title` VARCHAR(255),
-    FOREIGN KEY (`image`) REFERENCES `Image`(`id`)
-);
-
 -- Table: `Artist`
 CREATE TABLE `Artist` (
     `id` INT PRIMARY KEY,
@@ -60,6 +59,16 @@ CREATE TABLE `Venue` (
     `type` VARCHAR(50),
     `headerimg` VARCHAR(255),
     `thumbnaimg` VARCHAR(255)
+);
+
+-- Table: `Session`
+CREATE TABLE `Session` (
+    `id` INT PRIMARY KEY,
+    `venue` INT,
+    `capacity` INT,
+    `starttime` TIME,
+    `endtime` TIME,
+    FOREIGN KEY (`venue`) REFERENCES `Venue`(`id`)
 );
 
 -- Table: `Ticket`
@@ -81,16 +90,6 @@ CREATE TABLE `Tour` (
     `language` VARCHAR(50),
     `type` VARCHAR(50),
     FOREIGN KEY (`ticket`) REFERENCES `Ticket`(`id`)
-);
-
--- Table: `Session`
-CREATE TABLE `Session` (
-    `id` INT PRIMARY KEY,
-    `venue` INT,
-    `capacity` INT,
-    `starttime` TIME,
-    `endtime` TIME,
-    FOREIGN KEY (`venue`) REFERENCES `Venue`(`id`)
 );
 
 -- Table: `Music_session`
@@ -115,12 +114,6 @@ CREATE TABLE `Restaurant_session` (
     `comment` TEXT
 );
 
--- Table: `Image`
-CREATE TABLE `Image` (
-    `id` INT PRIMARY KEY,
-    `image` VARCHAR(255)
-);
-
 -- Table: `Order`
 CREATE TABLE `Order` (
     `id` INT PRIMARY KEY,
@@ -143,4 +136,13 @@ CREATE TABLE `Orderline` (
     FOREIGN KEY (`tour`) REFERENCES `Tour`(`id`)
 );
 
-
+-- Table: `Page`
+CREATE TABLE `Page` (
+    `id` INT PRIMARY KEY,
+    `header` VARCHAR(255),
+    `footer` VARCHAR(255),
+    `image` INT,
+    `content` TEXT,
+    `title` VARCHAR(255),
+    FOREIGN KEY (`image`) REFERENCES `Image`(`id`)
+);
