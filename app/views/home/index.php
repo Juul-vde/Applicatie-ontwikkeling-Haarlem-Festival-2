@@ -50,48 +50,49 @@ include __DIR__ . '/../header.php';
         </div>
 
         <section class="cards-container">
-                <div class="card-container-flex">
-                    <div class="card-image-box">
-                        <img src="/media/dancecard.png" alt="Dance Image" class="card-image">
-                    </div>
-                    <div class="card">
-                        <div class="card-text">
-                            <h2>DANCE!</h2>
-                            <p>Feel the rhythm of Haarlem!</p>
-                            <p>Immerse yourself in electrifying performances and vibrant dance events. Experience an exciting fusion of styles, from traditional to contemporary, as the city comes alive with movement and music.</p>
-                            <a href="#" class="cta-button">VIEW TICKETS</a>
-                        </div>
+            <div class="card-container-flex">
+                <div class="card-image-box">
+                    <img src="/media/dancecard.png" alt="Dance Image" class="card-image">
+                </div>
+                <div class="info-card">
+                    <div class="card-text">
+                        <h2>DANCE!</h2>
+                        <p>Feel the rhythm of Haarlem!</p>
+                        <p>Immerse yourself in electrifying performances and vibrant dance events. Experience an exciting fusion of styles, from traditional to contemporary, as the city comes alive with movement and music.</p>
+                        <a href="#" class="cta-button">VIEW TICKETS</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="card-container-flex">
-                    <div class="card-image-box">
-                        <img src="/media/historycard.png" alt="History Image" class="card-image">
-                    </div>
-                    <div class="card">
-                        <div class="card-text">
-                            <h2>HISTORY TOURS</h2>
-                            <p>Discover Haarlem’s rich history</p>
-                            <p>Join our expert guides on a journey through time as we explore the magnificent historical landmarks of Haarlem. Experience centuries of Dutch history, culture, and architecture.</p>
-                            <a href="#" class="cta-button">VIEW TOURS</a>
-                        </div>
+            <div class="card-container-flex">
+                <div class="info-card">
+                    <div class="card-text">
+                        <h2>HISTORY TOURS</h2>
+                        <p>Discover Haarlem’s rich history</p>
+                        <p>Join our expert guides on a journey through time as we explore the magnificent historical landmarks of Haarlem. Experience centuries of Dutch history, culture, and architecture.</p>
+                        <a href="#" class="cta-button">VIEW TOURS</a>
                     </div>
                 </div>
+                <div class="card-image-box">
+                    <img src="/media/historycard.png" alt="History Image" class="card-image">
+                </div>
+            </div>
 
-                <div class="card-container-flex">
-                    <div class="card-image-box">
-                        <img src="/media/foodcard.png" alt="Food Image" class="card-image">
-                    </div>
-                    <div class="card">
-                        <div class="card-text">
-                            <h2>FOOD</h2>
-                            <p>Savor the flavors of Haarlem!</p>
-                            <p>Embark on a culinary adventure through the city's finest restaurants and food spots. Taste a variety of delicious dishes that showcase Haarlem’s rich gastronomic heritage.</p>
-                            <a href="#" class="cta-button">LEARN MORE</a>
-                        </div>
+            <div class="card-container-flex">
+                <div class="card-image-box">
+                    <img src="/media/foodcard.png" alt="Food Image" class="card-image">
+                </div>
+                <div class="info-card">
+                    <div class="card-text">
+                        <h2>FOOD</h2>
+                        <p>Savor the flavors of Haarlem!</p>
+                        <p>Embark on a culinary adventure through the city's finest restaurants and food spots. Taste a variety of delicious dishes that showcase Haarlem’s rich gastronomic heritage.</p>
+                        <a href="#" class="cta-button">LEARN MORE</a>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
+
     </main>
     <?php include_once __DIR__ . '/../footer.php'; ?>
 </body>
