@@ -25,6 +25,36 @@ class UserRepository extends Repository
         return null;
     }
 
+    public function getUserById(int $id): ?User
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT id, role, username, password, email, image, phone, fullname, registration_date 
+             FROM User WHERE id = :id LIMIT 1'
+        );
+    
+        $stmt->execute([':id' => $id]);
+        $data = $stmt->fetch();
+    
+        return $data ? $this->mapToUserModel($data) : null;
+    }
+    
+    public function updateUser(User $user): bool
+    {
+        $stmt = $this->connection->prepare(
+            'UPDATE User SET username = :username, email = :email, phone = :phone, 
+            fullname = :fullname, image = :image WHERE id = :id'
+        );
+
+        return $stmt->execute([
+            ':username' => $user->username,
+            ':email' => $user->email,
+            ':phone' => $user->phone,
+            ':fullname' => $user->fullname,
+            ':image' => $user->image,
+            ':id' => $user->id
+        ]);
+    }
+
     public function mapToUserModel(array $data): User
     {
         $user = new User();

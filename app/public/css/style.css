@@ -3,10 +3,15 @@ body, html {
   margin: 0;
 }
 
+main {
+  flex-grow: 1;
+}
+
 .page-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
+  text-align: center;
 }
 
 .main-content {
@@ -83,6 +88,16 @@ header .logo img {
 .btn-signup:hover {
   background-color: #227c79;
   border-color: #227c79;
+}
+
+.btn-smaller {
+  width: 15rem;
+  padding: 10px;
+  background-color: #3CCAC6;
+}
+
+.btn-smaller:hover {
+  background-color: #227C79;
 }
 
 .link {
@@ -332,9 +347,9 @@ footer {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
-  text-align: center; /* Center text within the container */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   color: black;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }
@@ -353,4 +368,10 @@ footer {
 .description {
   font-size: 1.2rem;
   margin-bottom: 20px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
 }
