@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\UserService;
-
+use App\Enums\Role;
 class UserController
 {
     private $userService;
@@ -32,7 +32,7 @@ class UserController
                 $_SESSION['userId'] = $user->id;
                 $_SESSION['loggedIn'] = true;
                 // If you have roles, you can also set them (e.g., isAdmin)
-                // $_SESSION['isAdmin'] = $user->role === Role::Admin;
+                $_SESSION['isAdmin'] = $user->role === Role::ADMIN;
                 header('Location: /'); // Redirect to home page
                 exit;
             } else {

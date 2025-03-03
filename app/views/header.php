@@ -28,8 +28,14 @@
             </ul>
 
             <div class="text-end">
-                <a href="/user/login" class="btn btn-outline-light me-2">Login</a>
-                <button type="button" class="btn btn-signup">Sign-up</button>
+                <?php if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] == false): ?>
+                    <!-- Display Login and Sign-up buttons if the user is not logged in -->
+                    <a href="/user/login" class="btn btn-outline-light me-2">Login</a>
+                    <button type="button" class="btn btn-signup">Sign-up</button>
+                <?php else: ?>
+                    <!-- Display logout button if the user is logged in -->
+                    <a href="/user/logout" class="btn btn-outline-light me-2">Logout</a>
+                <?php endif; ?>
             </div>
 
             <div class="cart">

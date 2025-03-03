@@ -13,6 +13,7 @@
       "App\\": ".",
       "App\\Controllers\\": "./controllers",
       "App\\Models\\": "./models",
+      "App\\Enums\\": "./enums",
       "App\\Services\\": "./services",
       "App\\Repositories\\": "./repositories",
       "App\\Views\\": "./views"

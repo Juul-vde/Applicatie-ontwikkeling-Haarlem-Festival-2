@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS `OrderLine`;
 -- Table: `User`
 CREATE TABLE `User` (
     `id` INT PRIMARY KEY,
-    `role` VARCHAR(50),
+    `role` INT,
     `username` VARCHAR(100),
     `password` VARCHAR(100),
     `email` VARCHAR(100),
@@ -24,6 +24,9 @@ CREATE TABLE `User` (
     `fullname` VARCHAR(100),
     `registration_date` DATE
 );
+
+INSERT INTO `User` (`id`, `role`, `username`, `password`, `email`, `image`, `phone`, `fullname`, `registration_date`) VALUES
+(1, 0, 'admin', '$2y$10$e6M10y/PcucGVjlHW1ZnGeyX1.PW2AcDtyXTg5I5W2ePRYwW1J9Pa', 'admin@admin.com', NULL, NULL, 'Admin User', NULL);
 
 -- Table: `Event`
 CREATE TABLE `Event` (
@@ -139,3 +142,5 @@ CREATE TABLE `Orderline` (
     FOREIGN KEY (`restaurant_session`) REFERENCES `Restaurant_session`(`id`),
     FOREIGN KEY (`tour`) REFERENCES `Tour`(`id`)
 );
+
+
