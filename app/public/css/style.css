@@ -375,3 +375,36 @@ footer {
   flex-direction: column;
   height: 80vh;
 }
+
+.days-container {
+  display: flex;
+  justify-content: space-around; /* Space the days evenly */
+  align-items: center;
+  width: 80%; /* Adjust width as needed */
+  max-width: 800px; /* Maximum width */
+  background-color: #fff;
+  padding: 20px;
+  position: center;
+  margin-left: 31%;
+}
+
+.day {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background-color: #a375d1;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.day:hover {
+  background-color: #8a5bb1; /* Darker shade on hover */
+}
+
+.home-map {
+  margin-left: 33%;
+}

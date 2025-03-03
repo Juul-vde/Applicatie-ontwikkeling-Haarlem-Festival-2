@@ -48,6 +48,11 @@ include __DIR__ . '/../header.php';
                 </div>
             </div>
         </div>
+        <div class="days-container">
+            <div class="day">FRIDAY</div>
+            <div class="day">SATURDAY</div>
+            <div class="day">SUNDAY</div>
+        </div>
 
         <section class="cards-container">
             <div class="card-container-flex">
@@ -93,6 +98,9 @@ include __DIR__ . '/../header.php';
             </div>
         </section>
 
+        <div class="home-map">
+            <iframe src="https://www.google.com/maps/d/embed?mid=1H1laS7WHfG-iKSILOfpELjfg_-GzdVY&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
+        </div>
     </main>
     <?php include_once __DIR__ . '/../footer.php'; ?>
 </body>
