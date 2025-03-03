@@ -8,6 +8,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Login</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/png" href="/media/favicon.png">
 </head>
 
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">

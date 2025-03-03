@@ -9,6 +9,8 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/png" href="/media/favicon.png">
+
 </head>
 
 <body>
