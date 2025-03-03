@@ -215,6 +215,7 @@ footer {
   margin-bottom: 30px;
   gap: 30px;
   align-items: center;
+  margin-top: 3rem;
 }
 
 .card-image-box {
@@ -239,6 +240,19 @@ footer {
 .card-image-box:hover .card-image {
   transform: rotate(0deg);
   box-shadow: 5px 5px 5px #E0D1F0;
+}
+
+.card-image-box:nth-child(1):hover .card-image,
+.card-image-box:nth-child(3):hover .card-image {
+  transform: rotate(0deg);
+}
+
+.card-image-box:nth-child(1) .card-image {
+  transform: rotate(5deg);
+}
+
+.card-image-box:nth-child(3) .card-image {
+  transform: rotate(5deg);
 }
 
 .info-card {
