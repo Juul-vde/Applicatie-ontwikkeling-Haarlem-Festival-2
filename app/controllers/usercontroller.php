@@ -90,6 +90,61 @@ class UserController
         include __DIR__ . '/../views/user/dashboard.php';
     }    
 
+    public function manage() {
+        if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
+            header('Location: /');
+            exit;
+        }
+
+        $users = $this->userService->getAllUsers();
+        include __DIR__ . '/../views/user/manage.php';
+    }
+
+    public function changeRole() {
+        if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
+            header('Location: /');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_POST['userId'] ?? null;
+            $role = $_POST['role'] ?? null;
+
+            if ($userId && $role !== null) {
+                if ($this->userService->updateUserRole($userId, (int)$role)) {
+                    $_SESSION['success_message'] = 'User role updated successfully.';
+                } else {
+                    $_SESSION['error_message'] = 'Failed to update user role.';
+                }
+            }
+        }
+
+        header('Location: /user/manage');
+        exit;
+    }
+
+    public function deleteUser() {
+        if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
+            header('Location: /');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_POST['userId'] ?? null;
+
+            if ($userId) {
+                if ($this->userService->deleteUser($userId)) {
+                    $_SESSION['success_message'] = 'User deleted successfully.';
+                } else {
+                    $_SESSION['error_message'] = 'Failed to delete user.';
+                }
+            }
+        }
+
+        header('Location: /user/manage');
+        exit;
+    }
+
     public function updateProfile()
     {
         if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {

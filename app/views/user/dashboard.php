@@ -34,6 +34,9 @@ if (session_status() == PHP_SESSION_NONE) {
             <div class="dashboard-actions d-flex justify-content-center gap-3">
                 <a href="/user/editProfile" class="btn btn-smaller">Edit Profile</a>
                 <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete Account</button>
+                <?php if ($isAdmin): ?>
+                    <a href="/user/manage" class="btn btn-smaller">Manage Users</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

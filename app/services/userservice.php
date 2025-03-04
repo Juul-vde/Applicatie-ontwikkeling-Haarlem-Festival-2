@@ -17,12 +17,7 @@ class UserService
     public function authenticateUser(string $email, string $password): ?User
     {
         $user = $this->userRepository->getUserByEmail($email);
-
-        // if ($user && password_verify($password, $user->hashedPassword)) {
-        //     return $user; // Authentication successful
-        // }
-
-        return $user; // Authentication failed
+        return $user;
     }
 
     public function getUserProfile(int $id): ?User
@@ -43,12 +38,21 @@ class UserService
         $user->phone = $data['phone'];
         $user->fullname = $data['fullname'];
         
-        // Update image if it's set in the data
         if (isset($data['image'])) {
             $user->image = $data['image'];
         }
 
         return $this->userRepository->updateUser($user);
+    }
+
+    public function getAllUsers(): array
+    {
+        return $this->userRepository->getAllUsers();
+    }
+
+    public function updateUserRole(int $userId, int $role): bool
+    {
+        return $this->userRepository->updateUserRole($userId, $role);
     }
 
     public function deleteUser(int $id): bool
@@ -93,7 +97,7 @@ class UserService
 
         $this->userRepository->createUser($user);
 
-        return null; // No errors
+        return null;
     }
 
     public function checkUserExists($email, $username)

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repositories;
 
 use App\Models\User;
@@ -62,17 +61,39 @@ class UserRepository extends Repository
         return $stmt->execute([':id' => $id]);
     }
 
+    public function getAllUsers(): array
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT id, role, username, password, email, image, phone, fullname, registration_date 
+             FROM User ORDER BY fullname'
+        );
+        
+        $stmt->execute();
+        $users = [];
+        
+        while ($data = $stmt->fetch()) {
+            $users[] = $this->mapToUserModel($data);
+        }
+        
+        return $users;
+    }
+
+    public function updateUserRole(int $userId, int $role): bool
+    {
+        $stmt = $this->connection->prepare('UPDATE User SET role = :role WHERE id = :id');
+        return $stmt->execute([
+            ':role' => $role,
+            ':id' => $userId
+        ]);
+    }
+
     public function mapToUserModel(array $data): User
     {
         $user = new User();
 
-        // Map the fetched data to the User model properties
         $user->id = (int) $data['id'];
         $roleValue = (int) $data['role'];
-
-        // Safely map the role to the Role enum using tryFrom
-        $user->role = Role::tryFrom($roleValue) ?? Role::USER; // Default to USER if the value is invalid
-
+        $user->role = Role::tryFrom($roleValue) ?? Role::USER;
         $user->username = $data['username'];
         $user->password = $data['password'];
         $user->email = $data['email'];
@@ -80,11 +101,10 @@ class UserRepository extends Repository
         $user->phone = $data['phone'];
         $user->fullname = $data['fullname'];
 
-        // Check if 'registration_date' is not null or empty before converting to DateTime
         if (!empty($data['registration_date'])) {
             $user->registration_date = new \DateTime($data['registration_date']);
         } else {
-            $user->registration_date = null; // Handle null dates appropriately
+            $user->registration_date = null;
         }
 
         return $user;
@@ -93,15 +113,16 @@ class UserRepository extends Repository
     public function createUser($user)
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO User (fullname, username, email, password, phone) 
-             VALUES (:fullName, :username, :email, :hashedPassword, :phone)'
+            'INSERT INTO User (fullname, username, email, password, phone, image) 
+             VALUES (:fullName, :username, :email, :hashedPassword, :phone, :image)'
         );
         $stmt->execute([
             ':fullName' => $user->fullname,
             ':username' => $user->username,
             ':email' => $user->email,
             ':hashedPassword' => $user->password,
-            ':phone' => $user->phone
+            ':phone' => $user->phone,
+            ':image' => $user->image
         ]);
     }
     
