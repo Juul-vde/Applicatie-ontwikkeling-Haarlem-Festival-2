@@ -56,12 +56,12 @@
                     <input type="password" id="inputConfirmPassword" name="confirmPassword" class="form-control"
                         placeholder="Confirm Password" required maxlength="50">
                 </div>
-                <button class="btn btn-lg btn-primary w-100" type="submit">Register</button>
+                <button class="btn btn-lg btn-signup w-100" type="submit">Register</button>
                 <p class="mt-3 text-center">
-                    <a href="/user/login">Already have an account? Login instead</a>
+                    <a href="/user/login" class="link">Already have an account? Login instead</a>
                 </p>
                 <p class="mt-3 text-center">
-                    <a href="/">Back to Home</a>
+                    <a href="/" class="link">Back to Home</a>
                 </p>
             </form>
         </div>

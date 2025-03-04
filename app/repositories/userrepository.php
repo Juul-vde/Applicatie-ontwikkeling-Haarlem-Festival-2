@@ -53,4 +53,33 @@ class UserRepository extends Repository
         return $user;
     }
 
+    public function createUser($user)
+    {
+        $stmt = $this->connection->prepare(
+            'INSERT INTO User (fullname, username, email, password, phone) 
+             VALUES (:fullName, :username, :email, :hashedPassword, :phone)'
+        );
+        $stmt->execute([
+            ':fullName' => $user->fullname,
+            ':username' => $user->username,
+            ':email' => $user->email,
+            ':hashedPassword' => $user->password,
+            ':phone' => $user->phone
+        ]);
+    }
+    
+    public function checkUserExists($email, $username)
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT id FROM User WHERE email = :email OR username = :username'
+        );
+
+        $stmt->execute([
+            ':email' => $email,
+            ':username' => $username,
+        ]);
+
+        return $stmt->fetch() !== false;
+    }
+
 }
