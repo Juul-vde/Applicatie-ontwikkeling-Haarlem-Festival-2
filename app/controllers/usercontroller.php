@@ -104,4 +104,29 @@ class UserController
             exit;
         }
     }
+
+    public function register()
+    {
+        //$this->redirectIfLoggedIn();
+        $error = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $firstName = trim($_POST['firstName'] ?? '');
+            $lastName = trim($_POST['lastName'] ?? '');
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirmPassword = $_POST['confirmPassword'] ?? '';
+            $phone = trim($_POST['phone'] ?? '');
+
+            $error = $this->userService->registerUser($firstName, $lastName, $username, $email, $password, $confirmPassword, $phone);
+
+            if ($error === null) {
+                $_SESSION['success_message'] = 'Registration successful! Please log in.';
+                header('Location: /user/login');
+                exit;
+            }
+        }
+        include __DIR__ . '/../views/user/register.php';
+    }
 }
