@@ -391,18 +391,16 @@ footer {
 .day {
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
   text-transform: uppercase;
   padding: 10px 20px;
-  background-color: #a375d1;
-  color: white;
+  background-color: #3CCAC6;
+  color: #3D1F5C;
   border-radius: 5px;
   text-align: center;
   transition: background-color 0.3s ease;
-}
+  box-shadow: 0px -10px 10px #67349A, 
+  0px 10px 10px #67349A;
 
-.day:hover {
-  background-color: #8a5bb1; /* Darker shade on hover */
 }
 
 .home-map {

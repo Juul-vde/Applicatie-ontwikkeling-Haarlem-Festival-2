@@ -22,7 +22,7 @@ include __DIR__ . '/../header.php';
                 <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
             </div>
             <div class="carousel-inner">
-                <div class="carousel-item active">
+                <div class="carousel-item active" >
                     <img src="/media/dancemainbanner.png" class="d-block w-100" alt="Martin Garrix">
                     <div class="container">
                         <div class="carousel-caption text-start">
@@ -30,7 +30,7 @@ include __DIR__ . '/../header.php';
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
+                <div class="carousel-item" >
                     <img src="/media/foodmainbanner.png" class="d-block w-100" alt="Food">
                     <div class="container">
                         <div class="carousel-caption text-start">
@@ -38,7 +38,7 @@ include __DIR__ . '/../header.php';
                         </div>
                     </div>
                 </div>
-                <div class="carousel-item">
+                <div class="carousel-item" >
                     <img src="/media/historymainbanner.png" class="d-block w-100" alt="St. Bavo Church">
                     <div class="container">
                         <div class="carousel-caption text-start">
@@ -54,6 +54,9 @@ include __DIR__ . '/../header.php';
             <div class="day">SUNDAY</div>
         </div>
 
+        <div class="days-container">
+        <div class="day">OUR EVENTS</div>
+</div>
         <section class="cards-container">
             <div class="card-container-flex">
                 <div class="card-image-box">
@@ -98,6 +101,9 @@ include __DIR__ . '/../header.php';
             </div>
         </section>
 
+        <div class="days-container">
+        <div class="day">FESTIVAL MAP</div>
+</div>
         <div class="home-map">
             <iframe src="https://www.google.com/maps/d/embed?mid=1H1laS7WHfG-iKSILOfpELjfg_-GzdVY&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
         </div>
