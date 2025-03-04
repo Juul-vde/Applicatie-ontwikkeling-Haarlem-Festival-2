@@ -51,6 +51,11 @@ class UserService
         return $this->userRepository->updateUser($user);
     }
 
+    public function deleteUser(int $id): bool
+    {
+        return $this->userRepository->deleteUser($id);
+    }
+
     public function registerUser($firstName, $lastName, $username, $email, $password, $confirmPassword, $phone)
     {
         if (empty($firstName) || empty($lastName) || empty($username) || empty($email) || empty($password) || empty($confirmPassword) || empty($phone)) {

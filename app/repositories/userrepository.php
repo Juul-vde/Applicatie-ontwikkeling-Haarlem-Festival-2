@@ -51,9 +51,15 @@ class UserRepository extends Repository
             ':email' => $user->email,
             ':phone' => $user->phone,
             ':fullname' => $user->fullname,
-            ':image' => $user->image, // This will be null when deleting the profile picture
+            ':image' => $user->image,
             ':id' => $user->id
         ]);
+    }
+
+    public function deleteUser(int $id): bool
+    {
+        $stmt = $this->connection->prepare('DELETE FROM User WHERE id = :id');
+        return $stmt->execute([':id' => $id]);
     }
 
     public function mapToUserModel(array $data): User

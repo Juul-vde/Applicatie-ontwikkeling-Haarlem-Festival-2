@@ -50,6 +50,27 @@ class UserController
         exit;
     }
 
+    public function deleteAccount()
+    {
+        if (!isset($_SESSION['loggedIn']) || !isset($_SESSION['userId'])) {
+            header('Location: /user/login');
+            exit;
+        }
+
+        $userId = $_SESSION['userId'];
+
+        if ($this->userService->deleteUser($userId)) {
+            session_unset();
+            session_destroy();
+            header('Location: /');
+            exit;
+        } else {
+            $_SESSION['error_message'] = 'Failed to delete account. Please try again.';
+            header('Location: /user/dashboard');
+            exit;
+        }
+    }
+
     public function dashboard() {
         if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
             header('Location: /user/login');

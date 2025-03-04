@@ -31,10 +31,29 @@ if (session_status() == PHP_SESSION_NONE) {
                 </div>
             </div>
 
-            <div class="dashboard-actions mt-5 mb-5">
-                <div class="d-flex justify-content-between">
-                    <a href="/user/editProfile" class="btn btn-primary btn-smaller">Edit Profile</a>
-                    <a href="#" class="btn btn-delete">Delete Account</a>
+            <div class="dashboard-actions d-flex justify-content-center gap-3">
+                <a href="/user/editProfile" class="btn btn-smaller">Edit Profile</a>
+                <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You are about to delete your account. Are you sure you want to continue?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="/user/deleteAccount" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Continue</button>
+                    </form>
                 </div>
             </div>
         </div>
