@@ -3,10 +3,15 @@ body, html {
   margin: 0;
 }
 
+main {
+  flex-grow: 1;
+}
+
 .page-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
+  text-align: center;
 }
 
 .main-content {
@@ -83,6 +88,16 @@ header .logo img {
 .btn-signup:hover {
   background-color: #227c79;
   border-color: #227c79;
+}
+
+.btn-smaller {
+  width: 15rem;
+  padding: 10px;
+  background-color: #3CCAC6;
+}
+
+.btn-smaller:hover {
+  background-color: #227C79;
 }
 
 .link {
@@ -209,50 +224,67 @@ footer {
   object-position: center 30%;
 }
 
-.cards-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
 .card-container-flex {
   display: flex;
-  align-items: stretch; /* Ensure equal height */
-  width: 100%;
-  max-width: 800px; /* Adjust as needed */
-  gap: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  justify-content: center;
+  margin-bottom: 30px;
+  gap: 30px;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 .card-image-box {
-  flex: 1;
-  min-width: 200px;
-  max-width: 200px;
+  width: 350px;
+  height: 350px;
   overflow: hidden;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items:  center;
 }
 
 .card-image {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   object-fit: cover;
+  transform: rotate(-5deg);
+  box-shadow: 5px 5px 5px #E0D1F0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card {
-  flex: 2;
-  padding: 20px;
+.card-image-box:hover .card-image {
+  transform: rotate(0deg);
+  box-shadow: 5px 5px 5px #E0D1F0;
+}
+
+.card-image-box:nth-child(1):hover .card-image,
+.card-image-box:nth-child(3):hover .card-image {
+  transform: rotate(0deg);
+}
+
+.card-image-box:nth-child(1) .card-image {
+  transform: rotate(5deg);
+}
+
+.card-image-box:nth-child(3) .card-image {
+  transform: rotate(5deg);
+}
+
+.info-card {
+  max-width: 350px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 25px;
+  background-color: #E0D1F0;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: left;
 }
 
 .card-text {
-  text-align: left;
+  flex: 1;
 }
 
 .card h2 {
@@ -263,7 +295,7 @@ footer {
 
 .card p {
   font-size: 1rem;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   color: #555;
 }
 
@@ -280,4 +312,97 @@ footer {
 
 .cta-button:hover {
   background-color: #cc0000;
+}
+
+.history-main-banner {
+  width: 100%;
+  height: 50vh;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 50vh; /* Adjust height as needed */
+  overflow: hidden;
+}
+
+.overlay-text-history {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  text-align: left;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  width: 80%;
+  max-width: 700px;
+}
+
+.overlay-text-dance {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: black;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.days-container {
+  display: flex;
+  justify-content: space-around; /* Space the days evenly */
+  align-items: center;
+  width: 80%; /* Adjust width as needed */
+  max-width: 800px; /* Maximum width */
+  background-color: #fff;
+  padding: 20px;
+  position: center;
+  margin-left: 31%;
+}
+
+.day {
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background-color: #3CCAC6;
+  color: #3D1F5C;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px -10px 10px #67349A, 
+  0px 10px 10px #67349A;
+
+}
+
+.home-map {
+  margin-left: 33%;
 }

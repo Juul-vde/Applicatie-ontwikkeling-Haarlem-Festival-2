@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use PDO;
+use PDOException;
 
 class Repository
 {
