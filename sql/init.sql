@@ -143,6 +143,15 @@ CREATE TABLE `Page` (
     FOREIGN KEY (`image`) REFERENCES `Image`(`id`) ON DELETE CASCADE
 );
 
+-- Table: `History_Location`
+CREATE TABLE `History_Location` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255),
+    `description` TEXT,
+    `image` VARCHAR(255) DEFAULT NULL
+);
+
+
 -- Insert Data into the tables (Users, Artists, Venues, Sessions, etc.)
 
 -- Insert Users
@@ -222,3 +231,15 @@ INSERT INTO `Music_session` (`id`, `ticket`, `type`, `artist`) VALUES
 (18, 11, 'Club', 5),
 (19, 12, 'Club', 4),
 (20, 13, 'Club', 6);
+
+-- Insert History Locations
+INSERT INTO `History_Location` (`name`, `description`) VALUES
+('Church of St.Bavo', 'A historic church located in the heart of Haarlem, known for its stunning architecture and organ music.'),
+('Grote Markt', 'A large square in the center of Haarlem, home to the Town Hall and the statue of Laurens Janszoon Coster.'),
+('De Hallen', 'A former tram depot that has been transformed into a cultural hotspot with various shops, restaurants, and a cinema.'),
+('Proveniershof', 'A beautiful and historic courtyard in Haarlem, once a haven for the elderly, now a peaceful green space.'),
+('Jopenkerk (Break location)', 'A former church that has been converted into a brewery, known for its craft beer and lively atmosphere.'),
+('Waalse Kerk Haarlem', 'A historic Protestant church with a rich history, often used for cultural events and concerts.'),
+('Molen de Adriaan', 'A famous windmill in Haarlem, one of the few remaining traditional Dutch windmills, offering great views of the city.'),
+('Amsterdamse Poort', 'A historic city gate in Haarlem, one of the original entrances to the city, dating back to the 14th century.'),
+('Hof van Bakenes', 'A charming courtyard in Haarlem, offering a glimpse into the medieval past of the city with beautiful architecture and gardens.');
