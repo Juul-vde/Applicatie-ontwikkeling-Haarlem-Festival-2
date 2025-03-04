@@ -4,7 +4,7 @@
   "type": "project",
   "authors": [
     {
-      "name": "Wesley Amoureus"
+      "name": "Wesley Amoureus, Stijn van Veen, Juul van den Eijnden, Daniel Flierman"
     }
   ],
   "require": {},
@@ -13,6 +13,7 @@
       "App\\": ".",
       "App\\Controllers\\": "./controllers",
       "App\\Models\\": "./models",
+      "App\\Enums\\": "./enums",
       "App\\Services\\": "./services",
       "App\\Repositories\\": "./repositories",
       "App\\Views\\": "./views"

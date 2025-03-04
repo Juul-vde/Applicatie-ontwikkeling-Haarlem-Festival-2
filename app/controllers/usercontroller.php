@@ -1,23 +1,24 @@
 <?php
 namespace App\Controllers;
 
-
+use App\Services\UserService;
+use App\Enums\Role;
 class UserController
 {
     private $userService;
 
     public function __construct()
     {
-        parent::__construct();
         $this->userService = new UserService();
-        $this->startSession();
+        // Start the session if not already started
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function login()
     {
-        $this->redirectIfLoggedIn();
         $error = null;
-
         $successMessage = $_SESSION['success_message'] ?? null;
         unset($_SESSION['success_message']);
 
@@ -30,8 +31,8 @@ class UserController
             if ($user) {
                 $_SESSION['userId'] = $user->id;
                 $_SESSION['loggedIn'] = true;
-                $_SESSION['isAdmin'] = $user->role === Role::Admin;
-                $_SESSION['username'] = $user->username;
+                // If you have roles, you can also set them (e.g., isAdmin)
+                $_SESSION['isAdmin'] = $user->role === Role::ADMIN;
                 header('Location: /'); // Redirect to home page
                 exit;
             } else {
@@ -39,115 +40,68 @@ class UserController
             }
         }
 
+        // Include the login view and pass the error or success message
         include __DIR__ . '/../views/user/login.php';
-    }
-
-    public function register()
-    {
-        $this->redirectIfLoggedIn();
-        $error = null;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstName = trim($_POST['firstName'] ?? '');
-            $lastName = trim($_POST['lastName'] ?? '');
-            $username = trim($_POST['username'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
-            $confirmPassword = $_POST['confirmPassword'] ?? '';
-            $phone = trim($_POST['phone'] ?? '');
-
-            $error = $this->userService->registerUser($firstName, $lastName, $username, $email, $password, $confirmPassword, $phone);
-
-            if ($error === null) {
-                $_SESSION['success_message'] = 'Registration successful! Please log in.';
-                header('Location: /user/login');
-                exit;
-            }
-        }
-        include __DIR__ . '/../views/user/register.php';
-    }
-
-    public function accountdetails()
-    {
-        $navigationData = $this->getNavigationData();
-        if (!isset($_SESSION['loggedIn'])) {
-            header('Location: /user/login'); // Redirect to login if not logged in
-            exit;
-        }
-        $loggedInUser = $this->userService->getUserById($_SESSION['userId']);
-        include __DIR__ . '/../views/user/accountdetails.php';
     }
 
     public function logout()
     {
         session_unset();
         session_destroy();
-        header('Location: /'); // Redirect to the home page
+        header('Location: /');
         exit;
     }
 
-    public function updateUserInfo()
+    public function dashboard() {
+        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
+            header('Location: /user/login');
+            exit;
+        }
+    
+        $userId = $_SESSION['userId'] ?? null;
+    
+        if ($userId) {
+            $user = $this->userService->getUserProfile($userId);
+        } else {
+            $user = null;
+        }
+    
+        $isAdmin = $user && $user->role === Role::ADMIN;
+    
+        include __DIR__ . '/../views/user/dashboard.php';
+    }    
+
+    public function updateProfile()
     {
-        if (!isset($_SESSION['loggedIn'])) {
+        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
             header('Location: /user/login');
             exit;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $loggedInUser = $this->userService->getUserById($_SESSION['userId']);
-            $userId = $loggedInUser->id;
+        $userId = $_SESSION['userId'];
 
-            $newData = [
-                'username' => $_POST['username'] ?? '',
-                'fullName' => $_POST['fullname'] ?? '',
-                'email' => $_POST['email'] ?? '',
-                'phone' => $_POST['phone'] ?? '',
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'username' => trim($_POST['username']),
+                'email' => trim($_POST['email']),
+                'phone' => trim($_POST['phone']),
+                'fullname' => trim($_POST['fullname'])
             ];
 
-            $updatedFields = array_filter($newData, fn($value, $key) => $loggedInUser->$key !== $value, ARRAY_FILTER_USE_BOTH);
+            $imagePath = null;
+            if (!empty($_FILES['image']['name'])) {
+                $imagePath = '/uploads/' . basename($_FILES['image']['name']);
+                move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public' . $imagePath);
+            }
 
-            if (!empty($updatedFields)) {
-                $error = $this->userService->updateUserInfo($userId, $updatedFields);
-
-                $_SESSION[$error ? 'error' : 'success'] = $error ?: 'User information updated successfully!';
+            if ($this->userService->updateProfile($userId, $data, $imagePath)) {
+                $_SESSION['success_message'] = "Profile updated successfully!";
             } else {
-                $_SESSION['error'] = 'No changes detected.';
+                $_SESSION['error_message'] = "Failed to update profile.";
             }
-            header('Location: /user/accountdetails');
+
+            header("Location: /user/dashboard");
             exit;
         }
-
-        header('Location: /user/accountdetails');
-        exit;
-    }
-
-    public function changepassword()
-    {
-        if (!isset($_SESSION['loggedIn'])) {
-            header('Location: /user/login');
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $loggedInUser = $this->userService->getUserById($_SESSION['userId']);
-
-            $currentPassword = $_POST['currentPassword'] ?? '';
-            $newPassword = $_POST['newPassword'] ?? '';
-            $confirmPassword = $_POST['confirmPassword'] ?? '';
-
-            try {
-                $this->userService->changePassword($currentPassword, $newPassword, $confirmPassword, $loggedInUser);
-                $_SESSION['success'] = 'Password updated successfully!';
-            } catch (\Exception $e) {
-                $_SESSION['error'] = $e->getMessage();
-            }
-            header('Location: /user/accountdetails');
-            exit;
-        }
-
-        header('Location: /user/accountdetails');
-        exit;
     }
 }
-
-
