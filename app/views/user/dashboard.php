@@ -18,10 +18,6 @@ if (session_status() == PHP_SESSION_NONE) {
                         <p><strong>Phone:</strong> <?= htmlspecialchars($user->phone ?? 'N/A') ?></p>
                         <p><strong>Role:</strong> <?= $isAdmin ? 'Administrator' : 'User' ?></p>
                         <p><strong>Registered On:</strong> <?= $user->registration_date ? $user->registration_date->format('Y-m-d') : 'N/A' ?></p>
-                        
-                        <div class="d-flex justify-content-start mt-4">
-                            <a href="/user/editProfile" class="btn btn-primary btn-smaller">Edit Profile</a>
-                        </div>
                     </div>
                     <div class="col-md-4">
                         <div class="profile-picture-container mb-3">
@@ -31,8 +27,14 @@ if (session_status() == PHP_SESSION_NONE) {
                                 <img src="/media/Profile_avatar_placeholder.png" alt="Profile Picture" class="profile-picture">
                             <?php endif; ?>
                         </div>
-                        <a href="#" class="btn btn-smaller btn-delete-account">Delete Account</a>
                     </div>
+                </div>
+            </div>
+
+            <div class="dashboard-actions mt-5 mb-5">
+                <div class="d-flex justify-content-between">
+                    <a href="/user/editProfile" class="btn btn-primary btn-smaller">Edit Profile</a>
+                    <a href="#" class="btn btn-delete">Delete Account</a>
                 </div>
             </div>
         </div>

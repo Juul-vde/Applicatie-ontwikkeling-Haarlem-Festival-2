@@ -100,9 +100,8 @@ if (!empty($user->fullname)) {
                                                 <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/jpeg,image/png">
                                             </div>
                                             <small class="text-muted">Allowed formats: JPG, JPEG, PNG</small>
-                                            <small class="text-muted">Image will be cropped to a square</small>
                                             <?php if (!empty($user->image)): ?>
-                                                <button type="submit" class="passwd-button mt-2" name="deleteProfilePicture" value="1">Delete Profile Picture</button>
+                                                <button type="submit" class="passwd-button" name="deleteProfilePicture" value="1">Delete Profile Picture</button>
                                             <?php endif; ?>
                                         </div>
                                     </div>
