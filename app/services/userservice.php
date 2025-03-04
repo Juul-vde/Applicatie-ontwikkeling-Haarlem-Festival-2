@@ -13,6 +13,7 @@ class UserService
     {
         $this->userRepository = new UserRepository();
     }
+    
     public function authenticateUser(string $email, string $password): ?User
     {
         $user = $this->userRepository->getUserByEmail($email);
@@ -29,7 +30,7 @@ class UserService
         return $this->userRepository->getUserById($id);
     }
     
-    public function updateProfile(int $id, array $data, ?string $imagePath): bool
+    public function updateProfile(int $id, array $data): bool
     {
         $user = $this->userRepository->getUserById($id);
 
@@ -41,7 +42,11 @@ class UserService
         $user->email = $data['email'];
         $user->phone = $data['phone'];
         $user->fullname = $data['fullname'];
-        $user->image = $imagePath ?? $user->image;
+        
+        // Update image if it's set in the data
+        if (isset($data['image'])) {
+            $user->image = $data['image'];
+        }
 
         return $this->userRepository->updateUser($user);
     }
@@ -57,7 +62,7 @@ class UserService
         if (strlen($username) < 3) {
             return 'Username must be at least 3 characters long.';
         }
-        if (!preg_match('/^\+?[0-9]{7,15}$/', $phone)) { // Simple phone number validation
+        if (!preg_match('/^\+?[0-9]{7,15}$/', $phone)) {
             return 'Invalid phone number.';
         }
         if ($password !== $confirmPassword) {
@@ -66,18 +71,20 @@ class UserService
         if (strlen($password) < 6) {
             return 'Password must be at least 6 characters long.';
         }
-       if ($this->userRepository->checkUserExists($email, $username)) {
-           return 'Email or username already registered.';
+        if ($this->userRepository->checkUserExists($email, $username)) {
+            return 'Email or username already registered.';
         }
+
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $fullname = $firstName . " " . $lastName;
-        // Create the user
+        
         $user = new User();
         $user->fullname = $fullname;
         $user->username = $username;
         $user->password = $hashedPassword;
         $user->phone = $phone;
         $user->email = $email;
+        $user->image = '/media/Profile_avatar_placeholder.png';
 
         $this->userRepository->createUser($user);
 
@@ -86,15 +93,6 @@ class UserService
 
     public function checkUserExists($email, $username)
     {
-        $stmt = $this->connection->prepare(
-            'SELECT id FROM User WHERE email = :email OR username = :username'
-        );
-
-        $stmt->execute([
-            ':email' => $email,
-            ':username' => $username,
-        ]);
-
-        return $stmt->fetch() !== false;
+        return $this->userRepository->checkUserExists($email, $username);
     }
 }

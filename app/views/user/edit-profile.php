@@ -45,56 +45,72 @@ if (!empty($user->fullname)) {
                         <?php endif; ?>
                         
                         <form id="editProfileForm" method="POST" action="/user/updateProfile" enctype="multipart/form-data">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="firstName" class="form-label text-start d-block">First Name</label>
-                                    <input type="text" class="form-control" id="firstName" name="firstName" value="<?= htmlspecialchars($firstName) ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="lastName" class="form-label text-start d-block">Last Name</label>
-                                    <input type="text" class="form-control" id="lastName" name="lastName" value="<?= htmlspecialchars($lastName) ?>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="username" class="form-label text-start d-block">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($user->username ?? '') ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="password" class="form-label text-start d-block">Password</label>
-                                    <button type="button" class="passwd-button">Change Password</button>
-                                </div>
-                            </div>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label text-start d-block">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user->email ?? '') ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="phone" class="form-label text-start d-block">Phone Number</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($user->phone ?? '') ?>" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="image" class="form-label text-start d-block">Profile Picture</label>
-                                <?php if (!empty($user->image)): ?>
-                                    <div class="mb-2">
-                                        <img src="<?= htmlspecialchars($user->image) ?>" alt="Current Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label text-start d-block">First Name</label>
+                                            <input type="text" class="form-control" id="firstName" name="firstName" value="<?= htmlspecialchars($firstName) ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label text-start d-block">Last Name</label>
+                                            <input type="text" class="form-control" id="lastName" name="lastName" value="<?= htmlspecialchars($lastName) ?>" required>
+                                        </div>
                                     </div>
-                                <?php endif; ?>
-                                <input type="file" class="form-control" id="image" name="image">
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="username" class="form-label text-start d-block">Username</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($user->username ?? '') ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="password" class="form-label text-start d-block">Password</label>
+                                            <button type="button" class="passwd-button">Change Password</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label text-start d-block">Email Address</label>
+                                            <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user->email ?? '') ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="phone" class="form-label text-start d-block">Phone Number</label>
+                                            <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($user->phone ?? '') ?>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-start mt-4 gap-3">
+                                        <a href="/user/dashboard" class="btn btn-signup btn-smaller">Cancel</a>
+                                        <button type="submit" id="saveChangesBtn" class="btn btn-signup btn-smaller" disabled>Save Changes</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <div class="profile-picture-container mb-3">
+                                            <?php if (!empty($user->image)): ?>
+                                                <img src="<?= htmlspecialchars($user->image) ?>" alt="Profile Picture" class="profile-picture">
+                                            <?php else: ?>
+                                                <img src="/media/Profile_avatar_placeholder.png" alt="Profile Picture" class="profile-picture">
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="d-flex flex-column align-items-center gap-2">
+                                            <div class="input-group">
+                                                <input type="file" class="form-control form-control-sm" id="image" name="image" accept="image/jpeg,image/png">
+                                            </div>
+                                            <small class="text-muted">Allowed formats: JPG, JPEG, PNG</small>
+                                            <small class="text-muted">Image will be cropped to a square</small>
+                                            <?php if (!empty($user->image)): ?>
+                                                <button type="submit" class="passwd-button mt-2" name="deleteProfilePicture" value="1">Delete Profile Picture</button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <!-- Hidden field to store the combined full name -->
                             <input type="hidden" id="fullname" name="fullname" value="">
-                            
-                            <div class="d-flex justify-content-center mt-4">
-                                <a href="/user/dashboard" class="btn btn-outline-secondary btn-smaller me-2">Cancel</a>
-                                <button type="submit" id="saveChangesBtn" class="btn btn-signup btn-smaller" disabled>Save Changes</button>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -104,7 +120,6 @@ if (!empty($user->fullname)) {
 </main>
 
 <script>
-    // Enable the Save Changes button when any form field is changed
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('editProfileForm');
         const saveButton = document.getElementById('saveChangesBtn');

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Enums\Role;
+
 class UserRepository extends Repository
 {
     public function getUserByEmail(string $email): ?User
@@ -50,7 +51,7 @@ class UserRepository extends Repository
             ':email' => $user->email,
             ':phone' => $user->phone,
             ':fullname' => $user->fullname,
-            ':image' => $user->image,
+            ':image' => $user->image, // This will be null when deleting the profile picture
             ':id' => $user->id
         ]);
     }
@@ -111,5 +112,4 @@ class UserRepository extends Repository
 
         return $stmt->fetch() !== false;
     }
-
 }
