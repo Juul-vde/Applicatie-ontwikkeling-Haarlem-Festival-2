@@ -84,17 +84,5 @@ class UserService
         return null; // No errors
     }
 
-    public function checkUserExists($email, $username)
-    {
-        $stmt = $this->connection->prepare(
-            'SELECT id FROM User WHERE email = :email OR username = :username'
-        );
-
-        $stmt->execute([
-            ':email' => $email,
-            ':username' => $username,
-        ]);
-
-        return $stmt->fetch() !== false;
-    }
+   
 }

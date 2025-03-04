@@ -129,4 +129,35 @@ class UserController
         }
         include __DIR__ . '/../views/user/register.php';
     }
+    public function forgotpassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Step 1: Get the email from POST request
+            $email = $_POST['email'];
+    
+            // Step 2: Validate the email (check if it exists in your user database)
+            $user = $this->getUserByEmail($email);
+            
+            if ($user) {
+                // Step 3: Generate a reset token
+                $token = bin2hex(random_bytes(32));
+    
+                // Step 4: Save the token in the database with an expiration date
+                $this->storeResetToken($user['id'], $token);
+    
+                // Step 5: Send an email to the user with the reset link
+                $resetLink = "https://yourdomain.com/user/reset-password?token=" . $token;
+                $this->sendResetEmail($email, $resetLink);
+    
+                // Step 6: Provide feedback to the user
+                echo "If the email exists in our system, we have sent a password reset link to it.";
+            } else {
+                // Optional: For security reasons, you might still show the same message to prevent email enumeration
+                echo "If the email exists in our system, we have sent a password reset link to it.";
+            }
+        } else {
+            // Render the reset-password form (GET request)
+            include __DIR__ . '/../views/user/reset-password.php';
+        }
+    }
 }
