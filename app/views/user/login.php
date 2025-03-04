@@ -16,6 +16,12 @@
         <div class="card-body">
             <form class="form-signin" method="POST" action="/user/login">
                 <h1 class="h3 mb-3 font-weight-normal text-center text-cyan">Please sign in</h1>
+                 <!-- Display success message -->
+                <?php if ($successMessage): ?>
+                    <div class="alert alert-success text-center">
+                        <?= htmlspecialchars($successMessage) ?>
+                    </div>
+                <?php endif; ?>
                 <!-- Display error message -->
                 <?php if (isset($error)): ?>
                     <div class="alert alert-danger text-center">
