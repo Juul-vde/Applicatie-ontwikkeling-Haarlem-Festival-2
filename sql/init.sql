@@ -1,14 +1,14 @@
 USE webshop;
 
 -- Drop the dependent tables first
-DROP TABLE IF EXISTS `Music_session`;
+DROP TABLE IF EXISTS `Orderline`;
 DROP TABLE IF EXISTS `Tour`;
+DROP TABLE IF EXISTS `Music_session`;
 DROP TABLE IF EXISTS `Ticket`;
+DROP TABLE IF EXISTS `Order`;
 
 -- Then drop the other tables
 DROP TABLE IF EXISTS `Session`;
-DROP TABLE IF EXISTS `Orderline`;
-DROP TABLE IF EXISTS `Order`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `Event`;
 DROP TABLE IF EXISTS `Page`;
@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `Artist`;
 DROP TABLE IF EXISTS `Venue`;
 DROP TABLE IF EXISTS `Image`;
 DROP TABLE IF EXISTS `Restaurant_session`;
+
 -- Table: `Image`
 CREATE TABLE `Image` (
     `id` INT PRIMARY KEY,
