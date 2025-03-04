@@ -129,6 +129,7 @@ class UserController
         }
         include __DIR__ . '/../views/user/register.php';
     }
+    
     public function forgotpassword()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
