@@ -104,9 +104,12 @@ include __DIR__ . '/../header.php';
         <div class="days-container">
         <div class="day">FESTIVAL MAP</div>
 </div>
-        <div class="home-map">
-            <iframe src="https://www.google.com/maps/d/embed?mid=1H1laS7WHfG-iKSILOfpELjfg_-GzdVY&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
-        </div>
+<div class="home-map-container">
+    <div class="home-map">
+        <iframe src="https://www.google.com/maps/d/embed?mid=1H1laS7WHfG-iKSILOfpELjfg_-GzdVY&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
+    </div>
+</div>
+
     </main>
     <?php include_once __DIR__ . '/../footer.php'; ?>
 </body>
