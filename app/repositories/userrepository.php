@@ -31,13 +31,13 @@ class UserRepository extends Repository
             'SELECT id, role, username, password, email, image, phone, fullname, registration_date 
              FROM User WHERE id = :id LIMIT 1'
         );
-    
+
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch();
-    
+
         return $data ? $this->mapToUserModel($data) : null;
     }
-    
+
     public function updateUser(User $user): bool
     {
         $stmt = $this->connection->prepare(
@@ -97,7 +97,7 @@ class UserRepository extends Repository
             ':phone' => $user->phone
         ]);
     }
-    
+
     public function checkUserExists($email, $username)
     {
         $stmt = $this->connection->prepare(
@@ -111,5 +111,24 @@ class UserRepository extends Repository
 
         return $stmt->fetch() !== false;
     }
+    public function storeResetToken($id, $token)
+    {
+        // Calculate token expiration (e.g., 1 hour from now)
+        $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
+
+        $stmt = $this->connection->prepare(
+            'INSERT INTO password_resets (user_id, reset_token, expires_at) 
+        VALUES (:user_id, :reset_token, :expires_at)'
+        );
+
+        $stmt->execute([
+            ':user_id' => $id,
+            ':reset_token' => $token,
+            ':expires_at' => $expires_at
+        ]);
+
+        // Return true if the insertion was successful
+        return $stmt->rowCount() > 0;
+    }
 }

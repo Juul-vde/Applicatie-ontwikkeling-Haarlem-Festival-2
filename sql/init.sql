@@ -1,3 +1,4 @@
+CREATE database webshop;
 USE webshop;
 
 -- Drop tables in correct order

@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Services\UserService;
 use App\Enums\Role;
+use App\Utils\Mailer;
 class UserController
 {
     private $userService;
@@ -52,24 +53,25 @@ class UserController
         exit;
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
             header('Location: /user/login');
             exit;
         }
-    
+
         $userId = $_SESSION['userId'] ?? null;
-    
+
         if ($userId) {
             $user = $this->userService->getUserProfile($userId);
         } else {
             $user = null;
         }
-    
+
         $isAdmin = $user && $user->role === Role::ADMIN;
-    
+
         include __DIR__ . '/../views/user/dashboard.php';
-    }    
+    }
 
     public function updateProfile()
     {
@@ -129,27 +131,27 @@ class UserController
         }
         include __DIR__ . '/../views/user/register.php';
     }
-    
+
     public function forgotpassword()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Step 1: Get the email from POST request
+
             $email = $_POST['email'];
-    
-            // Step 2: Validate the email (check if it exists in your user database)
-            $user = $this->getUserByEmail($email);
-            
+
+
+            $user = $this->userService->getUserByMail($email);
+
             if ($user) {
                 // Step 3: Generate a reset token
                 $token = bin2hex(random_bytes(32));
-    
+
                 // Step 4: Save the token in the database with an expiration date
-                $this->storeResetToken($user['id'], $token);
-    
+                $this->userService->storeResetToken($user->id, $token);
+
                 // Step 5: Send an email to the user with the reset link
-                $resetLink = "https://yourdomain.com/user/reset-password?token=" . $token;
-                $this->sendResetEmail($email, $resetLink);
-    
+                $resetLink = "http://localhost/user/reset-password?token=" . $token;
+                $this->sendResetEmail($user, $resetLink);
+
                 // Step 6: Provide feedback to the user
                 echo "If the email exists in our system, we have sent a password reset link to it.";
             } else {
@@ -160,5 +162,31 @@ class UserController
             // Render the reset-password form (GET request)
             include __DIR__ . '/../views/user/reset-password.php';
         }
+
+    }
+
+    public function sendResetEmail($user, $resetLink)
+    {
+        $mailer = new Mailer();
+
+        // Proper HTML structure for the email body
+        $body = "
+        <html>
+        <body>
+            <h3>Please click the following link to reset your password:</h3>
+            <a href='" . $resetLink . "'>" . $resetLink . "</a>
+        </body>
+        </html>
+    ";
+
+        // Send the email
+        $mailer->sendEmail(
+            $user->email,
+            $user->fullname,
+            "Haarlem Festival - Password Reset",
+            $body,  // The email body with HTML
+            null,
+            null
+        );
     }
 }

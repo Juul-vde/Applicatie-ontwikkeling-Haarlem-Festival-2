@@ -28,7 +28,7 @@ class UserService
     {
         return $this->userRepository->getUserById($id);
     }
-    
+
     public function updateProfile(int $id, array $data, ?string $imagePath): bool
     {
         $user = $this->userRepository->getUserById($id);
@@ -66,8 +66,8 @@ class UserService
         if (strlen($password) < 6) {
             return 'Password must be at least 6 characters long.';
         }
-       if ($this->userRepository->checkUserExists($email, $username)) {
-           return 'Email or username already registered.';
+        if ($this->userRepository->checkUserExists($email, $username)) {
+            return 'Email or username already registered.';
         }
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $fullname = $firstName . " " . $lastName;
@@ -84,5 +84,13 @@ class UserService
         return null; // No errors
     }
 
-   
+    public function getUserByMail($email)
+    {
+        return $this->userRepository->getUserByEmail($email);
+    }
+
+    public function storeResetToken($id, $token)
+    {
+        return $this->userRepository->storeResetToken($id, $token);
+    }
 }
