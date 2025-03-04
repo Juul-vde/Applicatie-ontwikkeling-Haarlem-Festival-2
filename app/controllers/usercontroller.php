@@ -52,9 +52,81 @@ class UserController
         exit;
     }
 
+    public function dashboard() {
+        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
+            header('Location: /user/login');
+            exit;
+        }
+    
+        $userId = $_SESSION['userId'] ?? null;
+    
+        if ($userId) {
+            $user = $this->userService->getUserProfile($userId);
+        } else {
+            $user = null;
+        }
+    
+        $isAdmin = $user && $user->role === Role::ADMIN;
+    
+        include __DIR__ . '/../views/user/dashboard.php';
+    }    
 
+    public function updateProfile()
+    {
+        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
+            header('Location: /user/login');
+            exit;
+        }
 
+        $userId = $_SESSION['userId'];
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'username' => trim($_POST['username']),
+                'email' => trim($_POST['email']),
+                'phone' => trim($_POST['phone']),
+                'fullname' => trim($_POST['fullname'])
+            ];
+
+            $imagePath = null;
+            if (!empty($_FILES['image']['name'])) {
+                $imagePath = '/uploads/' . basename($_FILES['image']['name']);
+                move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public' . $imagePath);
+            }
+
+            if ($this->userService->updateProfile($userId, $data, $imagePath)) {
+                $_SESSION['success_message'] = "Profile updated successfully!";
+            } else {
+                $_SESSION['error_message'] = "Failed to update profile.";
+            }
+
+            header("Location: /user/dashboard");
+            exit;
+        }
+    }
+
+    public function register()
+    {
+        //$this->redirectIfLoggedIn();
+        $error = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $firstName = trim($_POST['firstName'] ?? '');
+            $lastName = trim($_POST['lastName'] ?? '');
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirmPassword = $_POST['confirmPassword'] ?? '';
+            $phone = trim($_POST['phone'] ?? '');
+
+            $error = $this->userService->registerUser($firstName, $lastName, $username, $email, $password, $confirmPassword, $phone);
+
+            if ($error === null) {
+                $_SESSION['success_message'] = 'Registration successful! Please log in.';
+                header('Location: /user/login');
+                exit;
+            }
+        }
+        include __DIR__ . '/../views/user/register.php';
+    }
 }
-
-
