@@ -99,6 +99,24 @@ header .logo img {
   background-color: #227C79;
 }
 
+.passwd-button {
+  width: 10rem;
+  padding: 6px 10px;
+  background-color: #3CCAC6;
+  color: white;
+  border-color: #3CCAC6;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-align: left;
+  margin-left: 0;
+  display: block;
+}
+
+.passwd-button:hover {
+  background-color: #227C79;
+  border-color: #227C79;
+}
+
 .link {
   color: #3ccac6;
 }

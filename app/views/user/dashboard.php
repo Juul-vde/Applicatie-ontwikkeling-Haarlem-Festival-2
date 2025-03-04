@@ -22,7 +22,10 @@ if (session_status() == PHP_SESSION_NONE) {
                 </div>
             <?php endif; ?>
 
-            <a href="/user/edit-profile" class="btn btn-primary btn-smaller mt-3">Edit Profile</a>
+            <div class="d-flex justify-content-center mt-4 gap-3">
+                <a href="/user/editProfile" class="btn btn-primary btn-smaller">Edit Profile</a>
+                <a href="#" class="btn btn-danger btn-smaller">Delete Account</a>
+            </div>
         </div>
     </div>
 </main>

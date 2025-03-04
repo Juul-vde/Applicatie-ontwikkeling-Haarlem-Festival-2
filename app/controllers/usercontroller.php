@@ -81,11 +81,17 @@ class UserController
         $userId = $_SESSION['userId'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Combine first and last name if they exist
+            $fullname = $_POST['fullname'] ?? '';
+            if (empty($fullname) && isset($_POST['firstName']) && isset($_POST['lastName'])) {
+                $fullname = trim($_POST['firstName'] . ' ' . $_POST['lastName']);
+            }
+            
             $data = [
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
                 'phone' => trim($_POST['phone']),
-                'fullname' => trim($_POST['fullname'])
+                'fullname' => $fullname
             ];
 
             $imagePath = null;
@@ -103,6 +109,24 @@ class UserController
             header("Location: /user/dashboard");
             exit;
         }
+    }
+
+    // Changed from edit_profile to editProfile to match PHP method naming conventions
+    public function editProfile() {
+        if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
+            header('Location: /user/login');
+            exit;
+        }
+    
+        $userId = $_SESSION['userId'] ?? null;
+    
+        if ($userId) {
+            $user = $this->userService->getUserProfile($userId);
+        } else {
+            $user = null;
+        }
+    
+        include __DIR__ . '/../views/user/edit-profile.php';
     }
 
     public function register()
