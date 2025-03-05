@@ -1,4 +1,3 @@
-CREATE database webshop;
 USE webshop;
 
 -- Drop tables in correct order
@@ -34,6 +33,15 @@ CREATE TABLE `User` (
     `fullname` VARCHAR(100) DEFAULT NULL,
     `registration_date` DATE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reset_token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `used` tinyint(1) DEFAULT 0
+) 
 
 -- Table: `Event`
 CREATE TABLE `Event` (
