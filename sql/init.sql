@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS `Artist`;
 DROP TABLE IF EXISTS `Venue`;
 DROP TABLE IF EXISTS `Image`;
 DROP TABLE IF EXISTS `Restaurant_session`;
+DROP TABLE IF EXISTS `password_resets`;
 
 -- Table: `Image`
 CREATE TABLE `Image` (
