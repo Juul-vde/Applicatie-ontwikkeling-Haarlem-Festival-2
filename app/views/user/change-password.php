@@ -14,41 +14,40 @@
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="card shadow-sm" style="max-width: 600px; width: 100%;">
         <div class="card-body">
-            <form class="form-signin" method="POST" action="/user/forgotpassword">
+            <form class="form-signin" method="POST" action="/user/resetPassword">
+                <input type="hidden" name="token" value="<?php echo htmlspecialchars($_GET['token']); ?>" />
                 <h1 class="h3 mb-3 font-weight-normal text-center text-cyan">Reset Password</h1>
                 <!-- Display success message -->
-                <?php if ($successMessage): ?>
-                    <div class="alert alert-success text-center">
-                        <?= htmlspecialchars($successMessage) ?>
+                <?php if ($error): ?>
+                    <div class="alert alert-danger text-center">
+                        <?= htmlspecialchars($error) ?>
                     </div>
                 <?php endif; ?>
-                <!-- Info Text -->
-                <p class="text-center text-muted small mb-4">
-                    Enter your email, and we will send you a link to reset your password.
-                </p>
-
-                <!-- Use Bootstrap grid and sizing classes -->
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-10">
                         <div class="mb-3">
-                            <label for="email" class="form-label text-cyan">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control"
-                                placeholder="Enter your email" required autofocus>
+                            <label for="password" class="form-label text-cyan">New Password</label>
+                            <input type="password" id="password" name="password" required class="form-control"
+                                placeholder="Enter new password" required autofocus>
                         </div>
                     </div>
                 </div>
-
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-10">
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label text-cyan">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                                placeholder="Confirm password" required autofocus>
+                        </div>
+                    </div>
+                </div>
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-10">
                         <div class="d-grid gap-2">
-                            <button class="btn btn-signup btn-lg" type="submit">Send Reset Link</button>
+                            <button class="btn btn-signup btn-lg mb-4" type="submit">Change password</button>
                         </div>
                     </div>
                 </div>
-
-                <p class="mt-3 text-center">
-                    <a href="/user/login" class="link">Back to login</a>
-                </p>
             </form>
         </div>
     </div>

@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Enums\Role;
+use App\Utils\Mailer;
 use App\Repositories\UserRepository;
 
 class UserService
@@ -84,6 +85,17 @@ class UserService
         return null; // No errors
     }
 
+    public function checkPassword($password, $confirmPassword)
+    {
+        if ($password !== $confirmPassword) {
+            return false;
+        }
+        if (strlen($password) < 6) {
+            return false;
+        }
+        return true;
+    }
+
     public function getUserByMail($email)
     {
         return $this->userRepository->getUserByEmail($email);
@@ -92,5 +104,59 @@ class UserService
     public function storeResetToken($id, $token)
     {
         return $this->userRepository->storeResetToken($id, $token);
+    }
+
+    // Check if the reset token is valid
+    public function isResetTokenValid($token)
+    {
+        return $this->userRepository->isResetTokenValid($token);
+    }
+    // Get user ID by reset token
+    public function getUserIdByToken($token)
+    {
+        return $this->userRepository->getUserIdByToken($token);
+    }
+
+    // Update the password for a user
+    public function updatePassword($userId, $hashedPassword)
+    {
+        return $this->userRepository->updatePassword($userId, $hashedPassword);
+    }
+
+    // Invalidate the reset token after password is changed
+    public function invalidateResetToken($token)
+    {
+        return $this->userRepository->invalidateResetToken($token);
+    }
+
+    public function sendResetEmail($user, $resetLink)
+    {
+        $mailer = new Mailer();
+
+        // Proper HTML structure for the email body
+        $body = "
+        <html>
+        <body>
+            <h3>Please click the following link to reset your password:</h3>
+            <a href='" . $resetLink . "'>" . $resetLink . "</a>
+        </body>
+        </html>
+    ";
+
+        // Send the email and check if it was successful
+        if (
+            $mailer->sendEmail(
+                $user->email,
+                $user->fullname,
+                "Haarlem Festival - Password Reset",
+                $body,  // The email body with HTML
+                null,
+                null
+            )
+        ) {
+            return true; // Email sent successfully
+        } else {
+            return false; // Email failed
+        }
     }
 }

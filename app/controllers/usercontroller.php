@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 use App\Services\UserService;
 use App\Enums\Role;
-use App\Utils\Mailer;
+
 class UserController
 {
     private $userService;
@@ -19,9 +19,10 @@ class UserController
 
     public function login()
     {
-        $error = null;
+        $error = $_SESSION['error_message'] ?? null;
         $successMessage = $_SESSION['success_message'] ?? null;
         unset($_SESSION['success_message']);
+        unset($_SESSION['error_message']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
@@ -134,29 +135,34 @@ class UserController
 
     public function forgotpassword()
     {
+        $successMessage = $_SESSION['success_message'] ?? null;
+        unset($_SESSION['success_message']);
+        $error = $_SESSION['error_message'] ?? null;
+        unset($_SESSION['error_message']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $email = $_POST['email'];
-
-
             $user = $this->userService->getUserByMail($email);
 
             if ($user) {
-                // Step 3: Generate a reset token
+                //Generate a reset token
                 $token = bin2hex(random_bytes(32));
-
-                // Step 4: Save the token in the database with an expiration date
                 $this->userService->storeResetToken($user->id, $token);
 
-                // Step 5: Send an email to the user with the reset link
-                $resetLink = "http://localhost/user/reset-password?token=" . $token;
-                $this->sendResetEmail($user, $resetLink);
-
-                // Step 6: Provide feedback to the user
-                echo "If the email exists in our system, we have sent a password reset link to it.";
+                //Send an email to the user with the reset link
+                $resetLink = "http://localhost/user/resetpassword?token=" . $token;
+                if ($this->userService->sendResetEmail($user, $resetLink)) {
+                    $_SESSION['success_message'] = 'If the email exists in our system, we have sent a password reset link to it.';
+                    header('Location: /user/login');
+                } else {
+                    // Log or handle email failure
+                    $_SESSION['error_message'] = 'There was an issue sending the email.';
+                    header('Location: /user/login');
+                }
             } else {
-                // Optional: For security reasons, you might still show the same message to prevent email enumeration
-                echo "If the email exists in our system, we have sent a password reset link to it.";
+                $_SESSION['success_message'] = 'If the email exists in our system, we have sent a password reset link to it.';
+                header('Location: /user/login');
             }
         } else {
             // Render the reset-password form (GET request)
@@ -165,28 +171,46 @@ class UserController
 
     }
 
-    public function sendResetEmail($user, $resetLink)
+    public function resetPassword()
     {
-        $mailer = new Mailer();
+        $error = $_SESSION['error_message'] ?? null;
+        unset($_SESSION['error_message']);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $token = $_GET['token'] ?? null;
+            // Verify if token exists in the URL and is valid
+            if ($token && $this->userService->isResetTokenValid($token)) {
+                include __DIR__ . '/../views/user/change-password.php';  // Show the form
+            } else {
+                $_SESSION['error_message'] = 'Invalid or expired link';
+                header('Location: /user/login');
+            }
+        }
 
-        // Proper HTML structure for the email body
-        $body = "
-        <html>
-        <body>
-            <h3>Please click the following link to reset your password:</h3>
-            <a href='" . $resetLink . "'>" . $resetLink . "</a>
-        </body>
-        </html>
-    ";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = $_POST['token'];
+            $newPassword = $_POST['password'];
+            $confirmPassword = $_POST['confirm_password'];
 
-        // Send the email
-        $mailer->sendEmail(
-            $user->email,
-            $user->fullname,
-            "Haarlem Festival - Password Reset",
-            $body,  // The email body with HTML
-            null,
-            null
-        );
+            if ($this->userService->checkPassword($newPassword, $confirmPassword)) {
+                if ($this->userService->isResetTokenValid($token)) {
+
+                    $userId = $this->userService->getUserIdByToken($token);
+                    $this->userService->updatePassword($userId, password_hash($newPassword, PASSWORD_DEFAULT));
+                    $this->userService->invalidateResetToken($token);
+
+                    $_SESSION['success_message'] = 'Password has been reset successfully, you can now log in.';
+                    header('Location: /user/login');
+                } else {
+                    $_SESSION['error_message'] = 'Invalid or expired link';
+                    header('Location: /user/login');
+                }
+            } else {
+                $_SESSION['error_message'] = 'Passwords did not match or were not at least 6 characters long.';
+                // Redirect to the reset password page again with the token
+                header('Location: /user/resetpassword?token=' . urlencode($token));
+            }
+        }
     }
+
+
 }

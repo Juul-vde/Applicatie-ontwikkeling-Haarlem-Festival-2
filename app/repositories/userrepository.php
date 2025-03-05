@@ -131,4 +131,34 @@ class UserRepository extends Repository
         // Return true if the insertion was successful
         return $stmt->rowCount() > 0;
     }
+
+    public function isResetTokenValid($token)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM password_resets WHERE reset_token = :token AND expires_at > NOW()");
+        $stmt->execute(['token' => $token]);
+        return $stmt->fetch() ? true : false;
+    }
+
+    public function getUserIdByToken($token)
+    {
+        $stmt = $this->connection->prepare("SELECT user_id FROM password_resets WHERE reset_token = :token");
+        $stmt->execute(['token' => $token]);
+        $result = $stmt->fetch(); // fetch() returns an associative array by default
+        return $result ? $result['user_id'] : null; // Access as array
+    }
+
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE id = :user_id");
+        return $stmt->execute([
+            'password' => $hashedPassword,
+            'user_id' => $userId
+        ]);
+    }
+
+    public function invalidateResetToken($token)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM password_resets WHERE reset_token = :token");
+        return $stmt->execute(['token' => $token]);
+    }
 }

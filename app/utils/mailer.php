@@ -44,10 +44,11 @@ class Mailer
 
         //send the message, check for errors
         if (!$mail->send()) {
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            // You can log the error or return it, but don't output it directly
+            error_log('Mailer Error: ' . $mail->ErrorInfo);
             return false;
         } else {
-            echo 'Message sent!';
+            // Instead of echoing, just return true for success
             return true;
         }
     }
