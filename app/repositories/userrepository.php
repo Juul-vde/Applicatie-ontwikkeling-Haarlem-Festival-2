@@ -31,13 +31,13 @@ class UserRepository extends Repository
             'SELECT id, role, username, password, email, image, phone, fullname, registration_date 
              FROM User WHERE id = :id LIMIT 1'
         );
-    
+
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch();
-    
+
         return $data ? $this->mapToUserModel($data) : null;
     }
-    
+
     public function updateUser(User $user): bool
     {
         $stmt = $this->connection->prepare(
@@ -67,14 +67,14 @@ class UserRepository extends Repository
             'SELECT id, role, username, password, email, image, phone, fullname, registration_date 
              FROM User ORDER BY fullname'
         );
-        
+
         $stmt->execute();
         $users = [];
-        
+
         while ($data = $stmt->fetch()) {
             $users[] = $this->mapToUserModel($data);
         }
-        
+
         return $users;
     }
 
@@ -125,7 +125,7 @@ class UserRepository extends Repository
             ':image' => $user->image
         ]);
     }
-    
+
     public function checkUserExists($email, $username)
     {
         $stmt = $this->connection->prepare(
@@ -138,5 +138,55 @@ class UserRepository extends Repository
         ]);
 
         return $stmt->fetch() !== false;
+    }
+    public function storeResetToken($id, $token)
+    {
+        // Calculate token expiration (e.g., 1 hour from now)
+        $expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+
+        $stmt = $this->connection->prepare(
+            'INSERT INTO password_resets (user_id, reset_token, expires_at) 
+        VALUES (:user_id, :reset_token, :expires_at)'
+        );
+
+        $stmt->execute([
+            ':user_id' => $id,
+            ':reset_token' => $token,
+            ':expires_at' => $expires_at
+        ]);
+
+        // Return true if the insertion was successful
+        return $stmt->rowCount() > 0;
+    }
+
+    public function isResetTokenValid($token)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM password_resets WHERE reset_token = :token AND expires_at > NOW()");
+        $stmt->execute(['token' => $token]);
+        return $stmt->fetch() ? true : false;
+    }
+
+    public function getUserIdByToken($token)
+    {
+        $stmt = $this->connection->prepare("SELECT user_id FROM password_resets WHERE reset_token = :token");
+        $stmt->execute(['token' => $token]);
+        $result = $stmt->fetch(); // fetch() returns an associative array by default
+        return $result ? $result['user_id'] : null; // Access as array
+    }
+
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE id = :user_id");
+        return $stmt->execute([
+            'password' => $hashedPassword,
+            'user_id' => $userId
+        ]);
+    }
+
+    public function invalidateResetToken($token)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM password_resets WHERE reset_token = :token");
+        return $stmt->execute(['token' => $token]);
     }
 }

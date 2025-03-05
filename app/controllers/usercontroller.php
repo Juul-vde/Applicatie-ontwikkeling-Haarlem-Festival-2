@@ -18,9 +18,10 @@ class UserController
 
     public function login()
     {
-        $error = null;
+        $error = $_SESSION['error_message'] ?? null;
         $successMessage = $_SESSION['success_message'] ?? null;
         unset($_SESSION['success_message']);
+        unset($_SESSION['error_message']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
@@ -71,26 +72,29 @@ class UserController
         }
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
             header('Location: /user/login');
             exit;
         }
-    
+
         $userId = $_SESSION['userId'] ?? null;
-    
+
         if ($userId) {
             $user = $this->userService->getUserProfile($userId);
         } else {
             $user = null;
         }
-    
-        $isAdmin = $user && $user->role === Role::ADMIN;
-    
-        include __DIR__ . '/../views/user/dashboard.php';
-    }    
 
-    public function manage() {
+        $isAdmin = $user && $user->role === Role::ADMIN;
+
+        include __DIR__ . '/../views/user/dashboard.php';
+    }
+
+
+    public function manage()
+    {
         if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
             header('Location: /');
             exit;
@@ -100,7 +104,8 @@ class UserController
         include __DIR__ . '/../views/user/manage.php';
     }
 
-    public function changeRole() {
+    public function changeRole()
+    {
         if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
             header('Location: /');
             exit;
@@ -111,7 +116,7 @@ class UserController
             $role = $_POST['role'] ?? null;
 
             if ($userId && $role !== null) {
-                if ($this->userService->updateUserRole($userId, (int)$role)) {
+                if ($this->userService->updateUserRole($userId, (int) $role)) {
                     $_SESSION['success_message'] = 'User role updated successfully.';
                 } else {
                     $_SESSION['error_message'] = 'Failed to update user role.';
@@ -123,7 +128,8 @@ class UserController
         exit;
     }
 
-    public function deleteUser() {
+    public function deleteUser()
+    {
         if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
             header('Location: /');
             exit;
@@ -159,7 +165,7 @@ class UserController
             if (empty($fullname) && isset($_POST['firstName']) && isset($_POST['lastName'])) {
                 $fullname = trim($_POST['firstName'] . ' ' . $_POST['lastName']);
             }
-            
+
             $data = [
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
@@ -175,7 +181,7 @@ class UserController
                     // Validate file extension
                     $fileExtension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
                     $allowedExtensions = ['jpg', 'jpeg', 'png'];
-                    
+
                     if (!in_array($fileExtension, $allowedExtensions)) {
                         $_SESSION['error_message'] = "Only JPG, JPEG & PNG files are allowed.";
                         header("Location: /user/editProfile");
@@ -211,20 +217,21 @@ class UserController
         }
     }
 
-    public function editProfile() {
+    public function editProfile()
+    {
         if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] === false) {
             header('Location: /user/login');
             exit;
         }
-    
+
         $userId = $_SESSION['userId'] ?? null;
-    
+
         if ($userId) {
             $user = $this->userService->getUserProfile($userId);
         } else {
             $user = null;
         }
-    
+
         include __DIR__ . '/../views/user/edit-profile.php';
     }
 
@@ -251,4 +258,85 @@ class UserController
         }
         include __DIR__ . '/../views/user/register.php';
     }
+
+    public function forgotpassword()
+    {
+        $successMessage = $_SESSION['success_message'] ?? null;
+        unset($_SESSION['success_message']);
+        $error = $_SESSION['error_message'] ?? null;
+        unset($_SESSION['error_message']);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $email = $_POST['email'];
+            $user = $this->userService->getUserByMail($email);
+
+            if ($user) {
+                //Generate a reset token
+                $token = bin2hex(random_bytes(32));
+                $this->userService->storeResetToken($user->id, $token);
+
+                //Send an email to the user with the reset link
+                $resetLink = "http://localhost/user/resetpassword?token=" . $token;
+                if ($this->userService->sendResetEmail($user, $resetLink)) {
+                    $_SESSION['success_message'] = 'If the email exists in our system, we have sent a password reset link to it.';
+                    header('Location: /user/login');
+                } else {
+                    // Log or handle email failure
+                    $_SESSION['error_message'] = 'There was an issue sending the email.';
+                    header('Location: /user/login');
+                }
+            } else {
+                $_SESSION['success_message'] = 'If the email exists in our system, we have sent a password reset link to it.';
+                header('Location: /user/login');
+            }
+        } else {
+            // Render the reset-password form (GET request)
+            include __DIR__ . '/../views/user/reset-password.php';
+        }
+
+    }
+
+    public function resetPassword()
+    {
+        $error = $_SESSION['error_message'] ?? null;
+        unset($_SESSION['error_message']);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $token = $_GET['token'] ?? null;
+            // Verify if token exists in the URL and is valid
+            if ($token && $this->userService->isResetTokenValid($token)) {
+                include __DIR__ . '/../views/user/change-password.php';  // Show the form
+            } else {
+                $_SESSION['error_message'] = 'Invalid or expired link';
+                header('Location: /user/login');
+            }
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $token = $_POST['token'];
+            $newPassword = $_POST['password'];
+            $confirmPassword = $_POST['confirm_password'];
+
+            if ($this->userService->checkPassword($newPassword, $confirmPassword)) {
+                if ($this->userService->isResetTokenValid($token)) {
+
+                    $userId = $this->userService->getUserIdByToken($token);
+                    $this->userService->updatePassword($userId, password_hash($newPassword, PASSWORD_DEFAULT));
+                    $this->userService->invalidateResetToken($token);
+
+                    $_SESSION['success_message'] = 'Password has been reset successfully, you can now log in.';
+                    header('Location: /user/login');
+                } else {
+                    $_SESSION['error_message'] = 'Invalid or expired link';
+                    header('Location: /user/login');
+                }
+            } else {
+                $_SESSION['error_message'] = 'Passwords did not match or were not at least 6 characters long.';
+                // Redirect to the reset password page again with the token
+                header('Location: /user/resetpassword?token=' . urlencode($token));
+            }
+        }
+    }
+
+
 }

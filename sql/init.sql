@@ -1,19 +1,9 @@
+DROP DATABASE IF EXISTS webshop;
+CREATE DATABASE webshop;
+
+
 USE webshop;
 
--- Drop tables in correct order
-DROP TABLE IF EXISTS `Orderline`;
-DROP TABLE IF EXISTS `Tour`;
-DROP TABLE IF EXISTS `Music_session`;
-DROP TABLE IF EXISTS `Ticket`;
-DROP TABLE IF EXISTS `Order`;
-DROP TABLE IF EXISTS `Session`;
-DROP TABLE IF EXISTS `User`;
-DROP TABLE IF EXISTS `Event`;
-DROP TABLE IF EXISTS `Page`;
-DROP TABLE IF EXISTS `Artist`;
-DROP TABLE IF EXISTS `Venue`;
-DROP TABLE IF EXISTS `Image`;
-DROP TABLE IF EXISTS `Restaurant_session`;
 
 -- Table: `Image`
 CREATE TABLE `Image` (
@@ -33,6 +23,15 @@ CREATE TABLE `User` (
     `fullname` VARCHAR(100) DEFAULT NULL,
     `registration_date` DATE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `reset_token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `used` tinyint(1) DEFAULT 0
+); 
 
 -- Table: `Event`
 CREATE TABLE `Event` (
@@ -147,7 +146,7 @@ CREATE TABLE `Page` (
 
 -- Insert Users
 INSERT INTO User (id, role, username, password, email, image, phone, fullname, registration_date) VALUES
-(1, 0, 'admin', '$2y$10$e6M10y/PcucGVjlHW1ZnGeyX1.PW2AcDtyXTg5I5W2ePRYwW1J9Pa', 'admin@admin.com', NULL, NULL, 'Admin User', NULL),
+(1, 0, 'admin', '$2y$12$7wucVQo4QZgdJgLQs7ASIOfEOgl0A1nm3ZdAmzFB9SlSu4RGEnIVi', 'admin@admin.com', NULL, NULL, 'Admin User', NULL),
 (5, 1, 'testuser', '$2y$12$xd5MRhwnkmv556RLNZt3MOdHGL9HsZX7kgXtsJDi0IsYX5anmqBXm', 'user@user.com', NULL, '0611111112', 'User Account', '2025-03-04');
 
 -- Insert Artists

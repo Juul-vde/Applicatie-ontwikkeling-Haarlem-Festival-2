@@ -40,6 +40,9 @@
                 </div>
                 <button class="btn btn-lg btn-signup w-100" type="submit">Sign in</button>
                 <p class="mt-3 text-center">
+                <a href="/user/forgotpassword" class="link">Forgot password?</a>
+                </p>
+                <p class="mt-3 text-center">
                     <a href="/user/register" class="link">Don't have an account? Register here</a>
                 </p>
                 <p class="mt-3 text-center">

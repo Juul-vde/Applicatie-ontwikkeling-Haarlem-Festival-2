@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Enums\Role;
+use App\Utils\Mailer;
 use App\Repositories\UserRepository;
 
 class UserService
@@ -13,18 +14,29 @@ class UserService
     {
         $this->userRepository = new UserRepository();
     }
-    
+
     public function authenticateUser(string $email, string $password): ?User
     {
         $user = $this->userRepository->getUserByEmail($email);
-        return $user;
+
+        if (!$user) {
+            return null;
+        }
+
+        if (password_verify($password, $user->password)) {
+            // Password is correct, return the user
+            return $user;
+        }
+
+        // Password is incorrect, return null
+        return null;
     }
 
     public function getUserProfile(int $id): ?User
     {
         return $this->userRepository->getUserById($id);
     }
-    
+
     public function updateProfile(int $id, array $data): bool
     {
         $user = $this->userRepository->getUserById($id);
@@ -37,7 +49,7 @@ class UserService
         $user->email = $data['email'];
         $user->phone = $data['phone'];
         $user->fullname = $data['fullname'];
-        
+
         if (isset($data['image'])) {
             $user->image = $data['image'];
         }
@@ -86,7 +98,7 @@ class UserService
 
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $fullname = $firstName . " " . $lastName;
-        
+
         $user = new User();
         $user->fullname = $fullname;
         $user->username = $username;
@@ -100,6 +112,80 @@ class UserService
         return null;
     }
 
+    public function checkPassword($password, $confirmPassword)
+    {
+        if ($password !== $confirmPassword) {
+            return false;
+        }
+        if (strlen($password) < 6) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getUserByMail($email)
+    {
+        return $this->userRepository->getUserByEmail($email);
+    }
+
+    public function storeResetToken($id, $token)
+    {
+        return $this->userRepository->storeResetToken($id, $token);
+    }
+
+    // Check if the reset token is valid
+    public function isResetTokenValid($token)
+    {
+        return $this->userRepository->isResetTokenValid($token);
+    }
+    // Get user ID by reset token
+    public function getUserIdByToken($token)
+    {
+        return $this->userRepository->getUserIdByToken($token);
+    }
+
+    // Update the password for a user
+    public function updatePassword($userId, $hashedPassword)
+    {
+        return $this->userRepository->updatePassword($userId, $hashedPassword);
+    }
+
+    // Invalidate the reset token after password is changed
+    public function invalidateResetToken($token)
+    {
+        return $this->userRepository->invalidateResetToken($token);
+    }
+
+    public function sendResetEmail($user, $resetLink)
+    {
+        $mailer = new Mailer();
+
+        // Proper HTML structure for the email body
+        $body = "
+        <html>
+        <body>
+            <h3>Please click the following link to reset your password:</h3>
+            <a href='" . $resetLink . "'>" . $resetLink . "</a>
+        </body>
+        </html>
+    ";
+
+        // Send the email and check if it was successful
+        if (
+            $mailer->sendEmail(
+                $user->email,
+                $user->fullname,
+                "Haarlem Festival - Password Reset",
+                $body,  // The email body with HTML
+                null,
+                null
+            )
+        ) {
+            return true; // Email sent successfully
+        } else {
+            return false; // Email failed
+        }
+    }
     public function checkUserExists($email, $username)
     {
         return $this->userRepository->checkUserExists($email, $username);
