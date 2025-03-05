@@ -14,15 +14,11 @@ class UserService
     {
         $this->userRepository = new UserRepository();
     }
+
     public function authenticateUser(string $email, string $password): ?User
     {
         $user = $this->userRepository->getUserByEmail($email);
-
-        // if ($user && password_verify($password, $user->hashedPassword)) {
-        //     return $user; // Authentication successful
-        // }
-
-        return $user; // Authentication failed
+        return $user;
     }
 
     public function getUserProfile(int $id): ?User
@@ -30,7 +26,7 @@ class UserService
         return $this->userRepository->getUserById($id);
     }
 
-    public function updateProfile(int $id, array $data, ?string $imagePath): bool
+    public function updateProfile(int $id, array $data): bool
     {
         $user = $this->userRepository->getUserById($id);
 
@@ -42,9 +38,27 @@ class UserService
         $user->email = $data['email'];
         $user->phone = $data['phone'];
         $user->fullname = $data['fullname'];
-        $user->image = $imagePath ?? $user->image;
+
+        if (isset($data['image'])) {
+            $user->image = $data['image'];
+        }
 
         return $this->userRepository->updateUser($user);
+    }
+
+    public function getAllUsers(): array
+    {
+        return $this->userRepository->getAllUsers();
+    }
+
+    public function updateUserRole(int $userId, int $role): bool
+    {
+        return $this->userRepository->updateUserRole($userId, $role);
+    }
+
+    public function deleteUser(int $id): bool
+    {
+        return $this->userRepository->deleteUser($id);
     }
 
     public function registerUser($firstName, $lastName, $username, $email, $password, $confirmPassword, $phone)
@@ -58,7 +72,7 @@ class UserService
         if (strlen($username) < 3) {
             return 'Username must be at least 3 characters long.';
         }
-        if (!preg_match('/^\+?[0-9]{7,15}$/', $phone)) { // Simple phone number validation
+        if (!preg_match('/^\+?[0-9]{7,15}$/', $phone)) {
             return 'Invalid phone number.';
         }
         if ($password !== $confirmPassword) {
@@ -70,19 +84,21 @@ class UserService
         if ($this->userRepository->checkUserExists($email, $username)) {
             return 'Email or username already registered.';
         }
+
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $fullname = $firstName . " " . $lastName;
-        // Create the user
+
         $user = new User();
         $user->fullname = $fullname;
         $user->username = $username;
         $user->password = $hashedPassword;
         $user->phone = $phone;
         $user->email = $email;
+        $user->image = '/media/Profile_avatar_placeholder.png';
 
         $this->userRepository->createUser($user);
 
-        return null; // No errors
+        return null;
     }
 
     public function checkPassword($password, $confirmPassword)
@@ -158,5 +174,9 @@ class UserService
         } else {
             return false; // Email failed
         }
+    }
+    public function checkUserExists($email, $username)
+    {
+        return $this->userRepository->checkUserExists($email, $username);
     }
 }
