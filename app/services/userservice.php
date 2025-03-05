@@ -18,7 +18,18 @@ class UserService
     public function authenticateUser(string $email, string $password): ?User
     {
         $user = $this->userRepository->getUserByEmail($email);
-        return $user;
+
+        if (!$user) {
+            return null;
+        }
+
+        if (password_verify($password, $user->password)) {
+            // Password is correct, return the user
+            return $user;
+        }
+
+        // Password is incorrect, return null
+        return null;
     }
 
     public function getUserProfile(int $id): ?User
